@@ -1,5 +1,30 @@
+# Teapot v3.0.0 configuration generated at 2019-02-16 19:36:29 +1300
 
-teapot_version "1.0"
+required_version "3.0"
+
+define_project "vizor-platform" do |project|
+	project.title = "Vizor Platform"
+end
+
+# Build Targets
+
+define_target 'glslang-executable' do |target|
+	target.depends 'Build/CMake'
+	
+	target.provides 'Executable/glslang' do
+		source_files = Files::Directory.join(target.package.path, "glslang")
+		cache_prefix = environment[:build_prefix] / environment.checksum 
+		package_files
+
+		cmake source: source_files, build_prefix: cache_prefix, arguments: [
+			"-DBUILD_SHARED_LIBS=OFF",
+		]
+
+		make prefix: cache_prefix, package_files: package_files
+		
+		glslang 
+	end
+end
 
 define_target "glslang" do |target|
 	target.provides "Convert/GLSLang" do
@@ -34,4 +59,21 @@ define_target "glslang" do |target|
 			end
 		end
 	end
+end
+
+# Configurations
+
+define_configuration 'development' do |configuration|
+	configuration[:source] = "https://github.com/kurocha"
+	configuration.import "glslang"
+	
+	# Provides all the build related infrastructure:
+	configuration.require 'platforms'
+end
+
+define_configuration "glslang" do |configuration|
+	configuration.public!
+	
+	configuration.require "build-make"
+	configuration.require "build-cmake"
 end
