@@ -28,6 +28,8 @@ define_target 'glslang-executable' do |target|
 end
 
 define_target "glslang" do |target|
+	target.depends "Executable/glslang", public: true
+	
 	target.provides "Convert/GLSLang" do
 		define Rule, "convert.glslang-file" do
 			input :source_file, pattern: /\.frag|\.vert/
