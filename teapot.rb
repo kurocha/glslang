@@ -15,7 +15,8 @@ define_target 'glslang-executable' do |target|
 	target.provides 'Executable/glslang' do
 		source_files = Files::Directory.join(target.package.path, "glslang")
 		cache_prefix = environment[:build_path] / environment.checksum
-		package_files = []
+		executable_path = cache_prefix + "bin/glslangValidator"
+		package_files = [executable_path]
 		
 		cmake source: source_files, build_prefix: cache_prefix, arguments: [
 			"-DBUILD_SHARED_LIBS=OFF",
@@ -23,7 +24,7 @@ define_target 'glslang-executable' do |target|
 		
 		make prefix: cache_prefix, package_files: package_files
 		
-		glslang_executable cache_prefix + "bin/glslangValidator"
+		glslang_executable executable_path
 	end
 end
 
