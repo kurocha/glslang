@@ -9,12 +9,14 @@ end
 # Build Targets
 
 define_target 'glslang-executable' do |target|
+	target.depends :platform
+	
 	target.depends 'Build/CMake'
 	target.depends 'Build/Make'
 	
 	target.provides 'Executable/glslang' do
 		source_files = Files::Directory.join(target.package.path, "glslang")
-		cache_prefix = environment[:build_path] / environment.checksum
+		cache_prefix = environment[:build_prefix] / environment.checksum
 		executable_path = cache_prefix + "bin/glslangValidator"
 		package_files = [executable_path]
 		
