@@ -2,8 +2,8 @@
 
 required_version "3.0"
 
-define_project "vizor-platform" do |project|
-	project.title = "Vizor Platform"
+define_project "glslang" do |project|
+	project.title = "Glslang"
 end
 
 # Build Targets
@@ -15,16 +15,14 @@ define_target 'glslang-executable' do |target|
 	target.depends 'Build/Make'
 	
 	target.provides 'Executable/glslang' do
-		source_files = Files::Directory.join(target.package.path, "glslang")
-		cache_prefix = environment[:build_prefix] / environment.checksum
+		source_files = target.package.path + "glslang"
+		cache_prefix = environment[:build_prefix] / environment.checksum + "glslang"
 		executable_path = cache_prefix + "bin/glslangValidator"
-		package_files = [executable_path]
+		package_files = executable_path
 		
-		cmake source: source_files, build_prefix: cache_prefix, arguments: [
+		cmake source: source_files, install_prefix: cache_prefix, arguments: [
 			"-DBUILD_SHARED_LIBS=OFF",
-		]
-		
-		make prefix: cache_prefix, package_files: package_files
+		], package_files: package_files
 		
 		glslang_executable executable_path
 	end
