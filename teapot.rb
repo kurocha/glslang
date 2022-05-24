@@ -56,7 +56,7 @@ define_target "glslang" do |target|
 				output_mapping = arguments.select{|key| [:root, :extension, :basename].include? key}
 				
 				arguments[:source].each do |path|
-					destination_path = path.with(output_mapping)
+					destination_path = path.with(**output_mapping)
 					
 					convert source_file: path, destination_path: destination_path
 				end
